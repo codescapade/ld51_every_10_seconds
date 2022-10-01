@@ -1,0 +1,9 @@
+{
+  "haxe.exclude": [
+    "kha",
+  ],
+    "[haxe]": {
+    "editor.formatOnSave": true,
+    "editor.formatOnPaste": true
+  }
+}

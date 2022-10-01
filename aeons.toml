@@ -3,16 +3,25 @@ projectName = "ld51_every_10_seconds"
 
 # To enable lDtk support add "ldtk-haxe-api" and "deepnightLibs". Install them using haxelib.
 # To enable nape physics add "nape-haxe4". Install this using haxelib.
-libraries = []
+libraries = ["ldtk-haxe-api", "deepnightLibs"]
 
 # To enable lDtk add "use_ldtk".
 # To enable nape add "use_nape"
-defines = []
+defines = ["use_ldtk"]
 
 [[atlas]]
-name = "atlas"
+name = "sprites"
 saveFolder = "assets"
-folders = ["atlasImages"]
+folders = ["atlasImages/sprites"]
 trimmed = true
 extrude = 1
 packMethod = "optimal"
+
+[[atlas]]
+name = "tiles"
+saveFolder = "assets"
+folders = ["atlasImages/tiles"]
+trimmed = false
+extrude = 1
+packMethod = "basic"
+noData = true

@@ -1,0 +1,46 @@
+{
+  "frames": [
+    {
+      "rotated": false,
+      "spriteSourceSize": {
+        "h": 26,
+        "w": 26,
+        "x": 3,
+        "y": 0
+      },
+      "frame": {
+        "h": 26,
+        "w": 23,
+        "x": 1,
+        "y": 1
+      },
+      "trimmed": true,
+      "sourceSize": {
+        "h": 26,
+        "w": 26
+      },
+      "filename": "player_idle_00"
+    },
+    {
+      "rotated": false,
+      "spriteSourceSize": {
+        "h": 6,
+        "w": 6,
+        "x": 0,
+        "y": 0
+      },
+      "frame": {
+        "h": 6,
+        "w": 6,
+        "x": 1,
+        "y": 29
+      },
+      "trimmed": true,
+      "sourceSize": {
+        "h": 6,
+        "w": 6
+      },
+      "filename": "segment"
+    }
+  ]
+}
