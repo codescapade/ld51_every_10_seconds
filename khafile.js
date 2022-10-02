@@ -20,7 +20,11 @@ project.addLibrary('deepnightLibs');
 
 project.addDefine('use_ldtk');
 
+project.addParameter('-dce full');
 
+project.targetOptions.html5.disableContextMenu = true;
+project.windowOptions.width = 960;
+project.windowOptions.height = 540;
 
 
 resolve(project);

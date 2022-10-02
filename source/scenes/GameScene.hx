@@ -61,7 +61,6 @@ class GameScene extends Scene {
     addSystem(SPlayerMovement).create();
     addSystem(SGameTimer).create();
     addSystem(SRender).create();
-    addSystem(SDebugRender).create();
 
     loadMap(level);
 

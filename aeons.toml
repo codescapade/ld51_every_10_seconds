@@ -9,6 +9,13 @@ libraries = ["ldtk-haxe-api", "deepnightLibs"]
 # To enable nape add "use_nape"
 defines = ["use_ldtk"]
 
+parameters = ["-dce full"]
+
+[aeons.html5]
+disableContextMenu = true
+width = 960
+height = 540
+
 [[atlas]]
 name = "sprites"
 saveFolder = "assets"
