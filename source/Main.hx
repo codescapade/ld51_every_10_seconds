@@ -11,7 +11,8 @@ class Main {
       preload: true,
       startScene: LoadScene,
       designWidth: 960,
-      designHeight: 540
+      designHeight: 540,
+      pixelArt: true
     });
   }
 }

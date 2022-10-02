@@ -1,5 +1,9 @@
 package systems;
 
+import utils.Anims;
+
+import aeons.components.CAnimation;
+
 import utils.Tag;
 
 import aeons.math.Vector2;
@@ -19,9 +23,9 @@ import aeons.core.System;
 
 class SPlayerMovement extends System implements Updatable {
   @:bundle
-  var playerBundles: Bundle<CTransform, CSimpleBody, CPlayer>;
+  var playerBundles: Bundle<CTransform, CSimpleBody, CPlayer, CAnimation>;
 
-  var player: Bundle<CTransform, CSimpleBody, CPlayer>;
+  var player: Bundle<CTransform, CSimpleBody, CPlayer, CAnimation>;
 
   final drag = 8.0;
 
@@ -30,6 +34,8 @@ class SPlayerMovement extends System implements Updatable {
   final acceleration = 20.0;
 
   final jumpSpeed = 480.0;
+
+  final jumpCancelSpeed = 300;
 
   final airYVelocity = 600;
 
@@ -59,6 +65,12 @@ class SPlayerMovement extends System implements Updatable {
 
   var rayTags = [Tag.Solid];
 
+  var airTime = 0.0;
+
+  var coyoteTime = 0.1;
+
+  final moveThreshold = 10;
+
   public function create(): SPlayerMovement {
     physics = getSystem(SSimplePhysics);
     playerBundles.onAdded(onPlayerAdded);
@@ -78,8 +90,15 @@ class SPlayerMovement extends System implements Updatable {
       return;
     }
 
+    if (player.cPlayer.exploded) {
+      player.cSimpleBody.maxVelocity.y = airYVelocity;
+      player.cSimpleBody.acceleration.x = 0;
+      return;
+    }
+
     final body = player.cSimpleBody;
     final transform = player.cTransform;
+    final anim = player.cAnimation;
     grounded = false;
     onLeftWall = false;
     onRightWall = false;
@@ -87,6 +106,9 @@ class SPlayerMovement extends System implements Updatable {
     if (body.isTouching(BOTTOM)) {
       grounded = true;
       jumping = false;
+      airTime = 0;
+    } else {
+      airTime += dt;
     }
 
     if (goingLeft) {
@@ -98,19 +120,36 @@ class SPlayerMovement extends System implements Updatable {
     } else {
       body.acceleration.x = 0;
     }
+    if ((body.velocity.x > 0 && body.velocity.x < 10) || (body.velocity.x < 0 && body.velocity.x > -10)) {
+      body.velocity.x = 0;
+    }
+
+    if (grounded) {
+      if (Math.abs(body.velocity.x) > moveThreshold) {
+        if (anim.current != Anims.PlayerWalk) {
+          anim.play(Anims.PlayerWalk);
+        }
+      } else {
+        anim.play(Anims.PlayerIdle);
+      }
+    } else if (onLeftWall || onRightWall || body.velocity.y > 0) {
+      anim.play(Anims.PlayerFall);
+    } else {
+      anim.play(Anims.PlayerJump);
+    }
 
     transform.getWorldPosition(rayStart);
     onLeftWall = onWall(true);
     onRightWall = onWall(false);
 
-    if (!grounded && (onLeftWall || onRightWall)) {
+    if (!grounded && (onLeftWall || onRightWall) && body.velocity.y > 0) {
       body.maxVelocity.y = wallYVelocity;
     } else {
       body.maxVelocity.y = airYVelocity;
     }
   }
 
-  function onPlayerAdded(bundle: Bundle<CTransform, CSimpleBody, CPlayer>) {
+  function onPlayerAdded(bundle: Bundle<CTransform, CSimpleBody, CPlayer, CAnimation>) {
     player = bundle;
 
     final body = player.cSimpleBody;
@@ -119,18 +158,27 @@ class SPlayerMovement extends System implements Updatable {
   }
 
   function keyDown(event: KeyboardEvent) {
-    if (player == null) {
+    if (player == null || player.cPlayer.exploded) {
       return;
     }
 
     if (leftKeys.contains(event.key)) {
+      if (!player.cPlayer.started) {
+        player.cPlayer.started = true;
+      }
       goingLeft = true;
     } else if (rightKeys.contains(event.key)) {
       goingRight = true;
+      if (!player.cPlayer.started) {
+        player.cPlayer.started = true;
+      }
     } else if (jumpKeys.contains(event.key)) {
+      if (!player.cPlayer.started) {
+        player.cPlayer.started = true;
+      }
       final body = player.cSimpleBody;
       final transform = player.cTransform;
-      if (grounded) {
+      if (grounded || airTime < coyoteTime) {
         grounded = false;
         body.velocity.y = -jumpSpeed;
         jumping = true;
@@ -149,7 +197,7 @@ class SPlayerMovement extends System implements Updatable {
   }
 
   function keyUp(event: KeyboardEvent) {
-    if (player == null) {
+    if (player == null || player.cPlayer.exploded) {
       return;
     }
 
@@ -157,15 +205,20 @@ class SPlayerMovement extends System implements Updatable {
       goingLeft = false;
     } else if (rightKeys.contains(event.key)) {
       goingRight = false;
+    } else if (jumpKeys.contains(event.key)) {
+      final body = player.cSimpleBody;
+      if (body.velocity.y < -jumpCancelSpeed) {
+        body.velocity.y = -jumpCancelSpeed;
+      }
     }
   }
 
   function onWall(left: Bool): Bool {
     rayStart.y += 8;
     if (left) {
-      rayEnd.set(rayStart.x - 14, rayStart.y);
+      rayEnd.set(rayStart.x - 13, rayStart.y);
     } else {
-      rayEnd.set(rayStart.x + 14, rayStart.y);
+      rayEnd.set(rayStart.x + 13, rayStart.y);
     }
 
     var hits = physics.raycast(rayStart, rayEnd, rayTags);

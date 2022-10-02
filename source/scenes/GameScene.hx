@@ -1,5 +1,21 @@
 package scenes;
 
+import utils.Anims;
+
+import aeons.components.CAnimation;
+import aeons.graphics.animation.Animation;
+import aeons.systems.SAnimation;
+
+import systems.SGameTimer;
+
+import components.CCountdownText;
+
+import aeons.components.CBitmapText;
+import aeons.components.CText;
+import aeons.math.Rect;
+
+import components.CFollow;
+
 import utils.Tag;
 
 import systems.SPlayerMovement;
@@ -35,10 +51,12 @@ class GameScene extends Scene {
       gravity: { x: 0, y: 1000 }
     });
 
+    addSystem(SAnimation).create();
     addSystem(SUpdate).create();
     addSystem(SPlayerMovement).create();
+    addSystem(SGameTimer).create();
     addSystem(SRender).create();
-    addSystem(SDebugRender).create();
+    // addSystem(SDebugRender).create();
 
     createCamera();
 
@@ -50,17 +68,42 @@ class GameScene extends Scene {
     final atlas = Aeons.assets.getAtlas('sprites');
 
     final e = addEntity(Entity);
-    e.addComponent(CTransform).create({ x: playerData.pixelX, y: playerData.pixelY });
+    final playerTransform = e.addComponent(CTransform).create({ x: playerData.pixelX, y: playerData.pixelY });
     e.addComponent(CSprite).create({ atlas: atlas, frameName: 'player_idle_00' });
     e.addComponent(CSimpleBody).create({ width: 20, height: 26, type: DYNAMIC });
-    e.addComponent(CPlayer).create();
+    e.addComponent(CPlayer).create(playerData.pixelX, playerData.pixelY);
+
+    var idleAnim = new Animation(Anims.PlayerIdle, atlas, ['player_idle_00'], 0.1);
+    var walkAnim = new Animation(Anims.PlayerWalk, atlas, [
+      'player_walk_00',
+      'player_walk_01',
+      'player_walk_02',
+      'player_walk_03',
+      'player_walk_04'
+    ], 0.1, LOOP);
+    var jumpAnim = new Animation(Anims.PlayerJump, atlas, ['player_jump_00'], 0.1);
+    var fallAnim = new Animation(Anims.PlayerFall, atlas, ['player_fall_00'], 0.1);
+    var deadAnim = new Animation(Anims.PlayerDead, atlas, ['player_dead_00'], 0.1);
+
+    e.addComponent(CAnimation).create([idleAnim, walkAnim, jumpAnim, fallAnim, deadAnim]);
+
+    final camera = addEntity(Entity);
+    final camTransform = camera.addComponent(CTransform).create();
+    camera.addComponent(CCamera).create({ backgroundColor: Color.fromBytes(80, 140, 200) });
+    camera.addComponent(CFollow).create(playerTransform, new Rect(0, 0, level.pxWid, level.pxHei));
+
+    final txt = addEntity(Entity);
+    txt.addComponent(CTransform).create({ x: 10, y: 10, parent: camTransform });
+    txt.addComponent(CBitmapText).create({
+      font: Aeons.assets.getBitmapFont('kenneypixel48'),
+      text: '10.00',
+      anchorX: 0,
+      anchorY: 0
+    });
+    txt.addComponent(CCountdownText).create();
   }
 
-  function createCamera() {
-    final camera = addEntity(Entity);
-    camera.addComponent(CTransform).create();
-    camera.addComponent(CCamera).create({ backgroundColor: Color.fromBytes(80, 140, 200) });
-  }
+  function createCamera() {}
 
   function loadMap(level: LdtkWorld.LdtkWorld_Level) {
     final tileset = Tileset.fromLdtkTileset(level.l_Tiles.tileset);
