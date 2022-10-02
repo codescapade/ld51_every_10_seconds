@@ -1,5 +1,15 @@
 package systems;
 
+import events.SoundEvent;
+
+import scenes.GameScene;
+
+import aeons.events.SceneEvent;
+
+import events.ResetEvent;
+
+import aeons.components.CCamera;
+
 import utils.Anims;
 
 import aeons.components.CAnimation;
@@ -24,6 +34,9 @@ import aeons.core.System;
 class SPlayerMovement extends System implements Updatable {
   @:bundle
   var playerBundles: Bundle<CTransform, CSimpleBody, CPlayer, CAnimation>;
+
+  @:bundle
+  var cameraBundles: Bundle<CCamera>;
 
   var player: Bundle<CTransform, CSimpleBody, CPlayer, CAnimation>;
 
@@ -86,11 +99,11 @@ class SPlayerMovement extends System implements Updatable {
   }
 
   public function update(dt: Float) {
-    if (player == null) {
+    if (player == null || player.cPlayer.finished) {
       return;
     }
 
-    if (player.cPlayer.exploded) {
+    if (player.cPlayer.dead) {
       player.cSimpleBody.maxVelocity.y = airYVelocity;
       player.cSimpleBody.acceleration.x = 0;
       return;
@@ -158,8 +171,25 @@ class SPlayerMovement extends System implements Updatable {
   }
 
   function keyDown(event: KeyboardEvent) {
-    if (player == null || player.cPlayer.exploded) {
+    if (player == null) {
       return;
+    }
+
+    if (player.cPlayer.dead) {
+      if (event.key == Space && player.cSimpleBody.velocity.magnitude() < 10) {
+        goingLeft = false;
+        goingRight = false;
+        onLeftWall = false;
+        onRightWall = false;
+        ResetEvent.emit(ResetEvent.RESET);
+      }
+      return;
+    }
+
+    if (player.cPlayer.finished) {
+      if (event.key == Space) {
+        SceneEvent.emit(SceneEvent.REPLACE, GameScene);
+      }
     }
 
     if (leftKeys.contains(event.key)) {
@@ -179,15 +209,18 @@ class SPlayerMovement extends System implements Updatable {
       final body = player.cSimpleBody;
       final transform = player.cTransform;
       if (grounded || airTime < coyoteTime) {
+        SoundEvent.emit(SoundEvent.JUMP);
         grounded = false;
         body.velocity.y = -jumpSpeed;
         jumping = true;
       } else if (onLeftWall) {
+        SoundEvent.emit(SoundEvent.JUMP);
         body.velocity.set(wallJumpSpeed.x, wallJumpSpeed.y);
         body.maxVelocity.y = airYVelocity;
         jumping = true;
         transform.scaleX = 1;
       } else if (onRightWall) {
+        SoundEvent.emit(SoundEvent.JUMP);
         body.velocity.set(-wallJumpSpeed.x, wallJumpSpeed.y);
         body.maxVelocity.y = airYVelocity;
         jumping = true;
@@ -197,7 +230,7 @@ class SPlayerMovement extends System implements Updatable {
   }
 
   function keyUp(event: KeyboardEvent) {
-    if (player == null || player.cPlayer.exploded) {
+    if (player == null || player.cPlayer.dead) {
       return;
     }
 

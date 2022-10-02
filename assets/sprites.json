@@ -3,6 +3,69 @@
     {
       "rotated": false,
       "spriteSourceSize": {
+        "h": 32,
+        "w": 32,
+        "x": 10,
+        "y": 0
+      },
+      "frame": {
+        "h": 32,
+        "w": 12,
+        "x": 1,
+        "y": 1
+      },
+      "trimmed": true,
+      "sourceSize": {
+        "h": 32,
+        "w": 32
+      },
+      "filename": "checkpoint"
+    },
+    {
+      "rotated": false,
+      "spriteSourceSize": {
+        "h": 32,
+        "w": 32,
+        "x": 0,
+        "y": 0
+      },
+      "frame": {
+        "h": 32,
+        "w": 22,
+        "x": 1,
+        "y": 35
+      },
+      "trimmed": true,
+      "sourceSize": {
+        "h": 32,
+        "w": 32
+      },
+      "filename": "finish_flag"
+    },
+    {
+      "rotated": false,
+      "spriteSourceSize": {
+        "h": 32,
+        "w": 32,
+        "x": 0,
+        "y": 0
+      },
+      "frame": {
+        "h": 32,
+        "w": 22,
+        "x": 1,
+        "y": 69
+      },
+      "trimmed": true,
+      "sourceSize": {
+        "h": 32,
+        "w": 32
+      },
+      "filename": "checkpoint_active"
+    },
+    {
+      "rotated": false,
+      "spriteSourceSize": {
         "h": 28,
         "w": 26,
         "x": 3,
@@ -10,8 +73,8 @@
       },
       "frame": {
         "h": 27,
-        "w": 22,
-        "x": 1,
+        "w": 20,
+        "x": 15,
         "y": 1
       },
       "trimmed": true,
@@ -33,7 +96,7 @@
         "h": 27,
         "w": 20,
         "x": 25,
-        "y": 1
+        "y": 30
       },
       "trimmed": true,
       "sourceSize": {
@@ -53,8 +116,8 @@
       "frame": {
         "h": 26,
         "w": 23,
-        "x": 47,
-        "y": 1
+        "x": 1,
+        "y": 103
       },
       "trimmed": true,
       "sourceSize": {
@@ -74,8 +137,8 @@
       "frame": {
         "h": 26,
         "w": 23,
-        "x": 72,
-        "y": 1
+        "x": 25,
+        "y": 59
       },
       "trimmed": true,
       "sourceSize": {
@@ -95,8 +158,8 @@
       "frame": {
         "h": 26,
         "w": 21,
-        "x": 97,
-        "y": 1
+        "x": 26,
+        "y": 87
       },
       "trimmed": true,
       "sourceSize": {
@@ -116,7 +179,7 @@
       "frame": {
         "h": 26,
         "w": 21,
-        "x": 120,
+        "x": 37,
         "y": 1
       },
       "trimmed": true,
@@ -137,8 +200,8 @@
       "frame": {
         "h": 26,
         "w": 23,
-        "x": 143,
-        "y": 1
+        "x": 47,
+        "y": 29
       },
       "trimmed": true,
       "sourceSize": {
@@ -158,8 +221,8 @@
       "frame": {
         "h": 26,
         "w": 23,
-        "x": 168,
-        "y": 1
+        "x": 49,
+        "y": 87
       },
       "trimmed": true,
       "sourceSize": {
@@ -179,8 +242,8 @@
       "frame": {
         "h": 20,
         "w": 20,
-        "x": 193,
-        "y": 1
+        "x": 50,
+        "y": 57
       },
       "trimmed": true,
       "sourceSize": {
@@ -188,6 +251,27 @@
         "w": 20
       },
       "filename": "player_dead_00"
+    },
+    {
+      "rotated": false,
+      "spriteSourceSize": {
+        "h": 32,
+        "w": 32,
+        "x": 0,
+        "y": 22
+      },
+      "frame": {
+        "h": 10,
+        "w": 32,
+        "x": 26,
+        "y": 115
+      },
+      "trimmed": true,
+      "sourceSize": {
+        "h": 32,
+        "w": 32
+      },
+      "filename": "spikes"
     }
   ]
 }

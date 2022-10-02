@@ -25,3 +25,4 @@ trimmed = false
 extrude = 1
 packMethod = "basic"
 noData = true
+maxWidth = 340

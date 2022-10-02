@@ -8,7 +8,9 @@ class CPlayer extends Component {
 
   public var started = false;
 
-  public var exploded = false;
+  public var dead = false;
+
+  public var finished = false;
 
   public function create(spawnX: Float, spawnY: Float): CPlayer {
     spawn = new Vector2(spawnX, spawnY);
