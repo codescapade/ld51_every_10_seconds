@@ -1,5 +1,10 @@
 package scenes;
 
+import aeons.systems.SDebugRender;
+import aeons.graphics.Color;
+
+import utils.Gbl;
+
 import aeons.Aeons;
 import aeons.components.CAnimation;
 import aeons.components.CCamera;
@@ -40,7 +45,8 @@ class GameScene extends Scene {
 
   public override function create() {
     final world = new LdtkWorld();
-    final level = world.getLevel('Level_1');
+    final level = world.getLevel('Level_${Gbl.instance.level}');
+    Aeons.timeStep.timeScale = 1.0;
 
     addSystem(SSimplePhysics).create({
       worldWidth: level.pxWid,
@@ -55,7 +61,7 @@ class GameScene extends Scene {
     addSystem(SPlayerMovement).create();
     addSystem(SGameTimer).create();
     addSystem(SRender).create();
-    // addSystem(SDebugRender).create();
+    addSystem(SDebugRender).create();
 
     loadMap(level);
 
@@ -71,7 +77,10 @@ class GameScene extends Scene {
       text: '10.0',
       fontSize: 48,
       anchorX: 0,
-      anchorY: 0
+      anchorY: 0,
+      color: Color.Black,
+      backgroundColor: Color.fromBytes(200, 200, 200, 80),
+      hasBackground: true
     });
     txt.addComponent(CCountdownText).create();
 
@@ -82,7 +91,7 @@ class GameScene extends Scene {
       font: Aeons.assets.getFont('kenney_pixel'),
       fontSize: 100,
       text: 'Level Complete',
-      color: Color.fromBytes(100, 200, 80)
+      color: Color.fromBytes(140, 240, 120)
     });
     levelStatus.addComponent(CLevelStatus).create();
     levelStatus.active = false;
@@ -169,23 +178,23 @@ class GameScene extends Scene {
       var xOffset = 0.0;
       var yOffset = 0.0;
       if (angle == 0) {
-        bodyWidth = 32;
+        bodyWidth = 26;
         bodyHeight = 8;
         xOffset = 0;
         yOffset = 12;
       } else if (angle == 90) {
         bodyWidth = 8;
-        bodyHeight = 32;
+        bodyHeight = 26;
         xOffset = -12;
         yOffset = 0;
       } else if (angle == 180) {
-        bodyWidth = 32;
+        bodyWidth = 26;
         bodyHeight = 8;
         xOffset = 0;
         yOffset = -12;
       } else if (angle == 270) {
         bodyWidth = 8;
-        bodyHeight = 32;
+        bodyHeight = 26;
         xOffset = 12;
         yOffset = 0;
       }

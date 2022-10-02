@@ -1,5 +1,5 @@
 [aeons]
-projectName = "ld51_every_10_seconds"
+projectName = "Be Fast"
 
 # To enable lDtk support add "ldtk-haxe-api" and "deepnightLibs". Install them using haxelib.
 # To enable nape physics add "nape-haxe4". Install this using haxelib.

@@ -84,6 +84,8 @@ class SPlayerMovement extends System implements Updatable {
 
   final moveThreshold = 10;
 
+  var restarting = false;
+
   public function create(): SPlayerMovement {
     physics = getSystem(SSimplePhysics);
     playerBundles.onAdded(onPlayerAdded);
@@ -106,6 +108,17 @@ class SPlayerMovement extends System implements Updatable {
     if (player.cPlayer.dead) {
       player.cSimpleBody.maxVelocity.y = airYVelocity;
       player.cSimpleBody.acceleration.x = 0;
+      if (player.cSimpleBody.velocity.magnitude() < 1 && !restarting) {
+        restarting = true;
+        Aeons.timers.create(0.5, () -> {
+          goingLeft = false;
+          goingRight = false;
+          onLeftWall = false;
+          onRightWall = false;
+          ResetEvent.emit(ResetEvent.RESET);
+          restarting = false;
+        }, 0, true);
+      }
       return;
     }
 
@@ -171,25 +184,8 @@ class SPlayerMovement extends System implements Updatable {
   }
 
   function keyDown(event: KeyboardEvent) {
-    if (player == null) {
+    if (player == null || player.cPlayer.dead || player.cPlayer.finished) {
       return;
-    }
-
-    if (player.cPlayer.dead) {
-      if (event.key == Space && player.cSimpleBody.velocity.magnitude() < 10) {
-        goingLeft = false;
-        goingRight = false;
-        onLeftWall = false;
-        onRightWall = false;
-        ResetEvent.emit(ResetEvent.RESET);
-      }
-      return;
-    }
-
-    if (player.cPlayer.finished) {
-      if (event.key == Space) {
-        SceneEvent.emit(SceneEvent.REPLACE, GameScene);
-      }
     }
 
     if (leftKeys.contains(event.key)) {
@@ -230,7 +226,7 @@ class SPlayerMovement extends System implements Updatable {
   }
 
   function keyUp(event: KeyboardEvent) {
-    if (player == null || player.cPlayer.dead) {
+    if (player == null || player.cPlayer.dead || player.cPlayer.finished) {
       return;
     }
 

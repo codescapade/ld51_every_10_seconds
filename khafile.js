@@ -1,5 +1,5 @@
 
-let project = new Project('ld51_every_10_seconds');
+let project = new Project('Be Fast');
 
 project.addAssets('assets/**', {
   nameBaseDir: 'assets',

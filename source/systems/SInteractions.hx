@@ -1,5 +1,7 @@
 package systems;
 
+import utils.Gbl;
+
 import events.SoundEvent;
 
 import aeons.components.CText;
@@ -55,7 +57,13 @@ class SInteractions extends System {
     playerBundles.first.cSimpleBody.acceleration.x = 0;
     statusTextBundles.first.cText.text = 'Level Complete';
     statusTextBundles.first.entity.active = true;
-    playerBundles.first.cAnimation.play(Anims.PlayerFall);
+    if (!playerBundles.first.cPlayer.dead) {
+      playerBundles.first.cAnimation.play(Anims.PlayerFall);
+    }
+
+    Aeons.timers.create(1.5, () -> {
+      Gbl.instance.nextLevel();
+    }, 0, true);
   }
 
   function hitCheckpoint(player: Body, checkpoint: Body) {

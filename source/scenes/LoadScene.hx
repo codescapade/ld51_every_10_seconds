@@ -8,6 +8,6 @@ class LoadScene extends Scene {
   public override function create() {
     Aeons.assets.loadAtlas('sprites');
 
-    SceneEvent.emit(SceneEvent.REPLACE, GameScene);
+    SceneEvent.emit(SceneEvent.REPLACE, IntroScene);
   }
 }
